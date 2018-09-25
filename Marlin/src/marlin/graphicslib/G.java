@@ -35,6 +35,21 @@ public class G {
       this.x = x;
       this.y = y;
     }
+
+    public void add(V v) {
+      this.x += v.x;
+      this.y += v.y;
+    }
+
+    public void set(V v) {
+      this.x = v.x;
+      this.y = v.y;
+    }
+
+    public void set(int x, int y) {
+      this.x = x;
+      this.y = y;
+    }
   }
 
   /**
@@ -68,6 +83,30 @@ public class G {
     public void resize(int x, int y) {
       size.x = x;
       size.y = y;
+    }
+
+    public int lowX() {
+      return loc.x;
+    }
+
+    public int hiX() {
+      return loc.x + size.x;
+    }
+
+    public int midX() {
+      return loc.x + size.x / 2;
+    }
+
+    public int lowY() {
+      return loc.y;
+    }
+
+    public int hiY() {
+      return loc.y + size.y;
+    }
+
+    public int midY() {
+      return loc.y + size.y / 2;
     }
   }
 
