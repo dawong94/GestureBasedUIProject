@@ -1,6 +1,5 @@
 package marlin;
 
-import java.awt.Button;
 import marlin.graphicslib.Window;
 import marlin.sandbox.Squares;
 
