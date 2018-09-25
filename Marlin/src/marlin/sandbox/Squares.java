@@ -15,8 +15,8 @@ import marlin.graphicslib.Window;
 
 public class Squares extends Window implements ActionListener {
 
-  //  public static VS theVS = new VS(100, 100, 200, 300);
-//  public static Color theColor = G.rndColor();
+  public static VS theVS = new VS(100, 100, 200, 300);
+  public static Color theColor = G.rndColor();
   public static Square theSquare = new Square(200, 320);
   public static Square.SquareList theList = new Square.SquareList();
   public static Square backgroundSquare = new Square(0, 0) {
@@ -35,8 +35,7 @@ public class Squares extends Window implements ActionListener {
 
     @Override
     public void released(int x, int y) {
-      firstPressed.set(x, y); // 似乎没作用
-      theList.get(theList.size() - 1).dv = new G.V(G.rnd(20) - 10, G.rnd(20) - 10);
+      firstPressed.set(x, y);
     }
   };
 
@@ -66,7 +65,6 @@ public class Squares extends Window implements ActionListener {
 
   @Override
   public void mousePressed(MouseEvent me) {
-
     int x = me.getX();
     int y = me.getY();
     firstPressed.set(x, y);
@@ -100,8 +98,7 @@ public class Squares extends Window implements ActionListener {
   public static class Square extends G.VS implements I.Area {
 
     public Color c = G.rndColor();
-    //    public G.V dv = new G.V(G.rnd(20) - 10, G.rnd(20) - 10);
-    public G.V dv = new G.V(0, 0);
+    public G.V dv = new G.V(G.rnd(20) - 10, G.rnd(20) - 10);
 
     /**
      * A constructor that create a square shape with top-left coordinate (x, y) and fixed weight
@@ -112,6 +109,8 @@ public class Squares extends Window implements ActionListener {
     }
 
     public void moveAndBounce() {
+
+      loc.add(dv);
       if (lowX() < 0 && dv.x < 0) {
         dv.x = -dv.x;
       }
@@ -124,7 +123,6 @@ public class Squares extends Window implements ActionListener {
       if (hiY() > UC.screenHeight && dv.y > 0) {
         dv.y = -dv.y;
       }
-      loc.add(dv);
     }
 
     public void draw(Graphics g) {
