@@ -1,4 +1,4 @@
-package marlin;
+package marlin.graphicslib;
 
 import java.awt.Graphics;
 

@@ -124,6 +124,9 @@ public class G {
 
   }
 
+  /*
+  此类定义了线条图形的基本属性和方法。所谓线条，即把屏幕中每一个点的坐标保存起来，然后每两点画线连接。
+   */
   public static class PL {
 
     public V[] points;

@@ -7,8 +7,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.Timer;
-import marlin.I;
-import marlin.UC;
+import marlin.graphicslib.I;
+import marlin.graphicslib.UC;
 import marlin.graphicslib.G;
 import marlin.graphicslib.Window;
 
