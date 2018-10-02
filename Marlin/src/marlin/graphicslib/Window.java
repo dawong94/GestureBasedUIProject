@@ -29,6 +29,8 @@ public class Window extends JPanel implements MouseListener, MouseMotionListener
   public static Dimension PREF_SIZE = new Dimension(500, 400);
 
   public Window(String t, int w, int h) {
+    // 实现双缓存效果
+    super(true);
     TITLE = t;
     PREF_SIZE = new Dimension(w, h);
   }

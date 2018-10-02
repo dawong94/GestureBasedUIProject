@@ -20,6 +20,12 @@ public class PaintInk extends Window {
   public void paintComponent(Graphics g) {
     G.fillBackground(g, Color.WHITE);
     g.setColor(Color.RED);
+    g.drawString("points: " + Ink.BUFFER.n, 600, 30);
+
+    // 可以把graphic改成graphic2D实现抗锯齿
+//    RenderingHints hints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//    g2d.addRenderingHints(hint);
+
     /*
     此处绘制的过去已经画好并保存在intList的图形。
      */

@@ -3,6 +3,7 @@ package marlin.reaction;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import marlin.graphicslib.G.BBox;
 import marlin.graphicslib.I;
 import marlin.graphicslib.UC;
 import marlin.graphicslib.G;
@@ -25,13 +26,15 @@ public class Ink extends G.PL implements I.Show {
   public static Buffer BUFFER = new Buffer();
 
   /*
-  构造器的作用在于每次画完一个图形鼠标释放时，把当前BUFFER中储存的图形保存为一个新的Int对象。
+  构造器的作用在于每次画完一个图形鼠标释放时，把当前BUFFER中储存的图形保存为一个新的Ink对象。
    */
   public Ink() {
     super(BUFFER.n);
     for (int i = 0; i < BUFFER.n; i++) {
       this.points[i].set(BUFFER.points[i]);
     }
+    G.V.T.set(Ink.BUFFER.bBox, new G.VS(100, 100, 100, 100));
+    this.transform();
   }
 
   /*
@@ -65,12 +68,21 @@ public class Ink extends G.PL implements I.Show {
 
     public static final int MAX = UC.inkBufferMax;
     public int n = 0;
+    public BBox bBox = new BBox();
 
     /*
     根据前文所述，此处private改回public效果相同。
      */
-    public Buffer() {
+    private Buffer() {
       super(MAX);
+    }
+
+    public G.PL subSample(int k) {
+      G.PL res = new G.PL(k);
+      for (int i = 0; i < k; i++) {
+        res.points[i].set(this.points[i * (n - 1) / (k - 1)]);
+      }
+      return res;
     }
 
     /*
@@ -81,6 +93,7 @@ public class Ink extends G.PL implements I.Show {
     public void add(int x, int y) {
       if (n < MAX) {
         points[n++].set(x, y);
+        bBox.add(x, y);
       }
     }
 
@@ -101,6 +114,7 @@ public class Ink extends G.PL implements I.Show {
     public void pressed(int x, int y) {
       clear();
       add(x, y);
+      bBox.set(x, y);
     }
 
     @Override
@@ -117,11 +131,19 @@ public class Ink extends G.PL implements I.Show {
     public void show(Graphics g) {
       g.setColor(Color.GREEN);
       /*
-     课上最后一个bug（即每次画图形时都有冗余线条出现）出在这里。
+     week2-2课上最后一个bug（即每次画图形时都有冗余线条出现）出在这里。
      老师之所以debug后drawN代替draw方法，是因为只需要在窗口画出Buffer对象中序号n之前保存的点。
      这是因为每次Buffer清零clear方法只是清零了序号n，也就是说大于序号n的位置其实保存有此前图形记录的。
        */
       drawN(g, n);
+      drawNdots(g, n);
+      if (n > 0) {
+        G.PL ss = subSample(UC.normSampleSize);
+        g.setColor(Color.BLUE);
+        ss.drawNdots(g, UC.normSampleSize);
+        ss.draw(g);
+        bBox.draw(g);
+      }
     }
   }
 }
