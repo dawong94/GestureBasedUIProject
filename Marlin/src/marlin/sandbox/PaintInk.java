@@ -7,10 +7,14 @@ import marlin.graphicslib.UC;
 import marlin.graphicslib.G;
 import marlin.graphicslib.Window;
 import marlin.reaction.Ink;
+import marlin.reaction.Shape;
+import marlin.reaction.Shape.Prototype;
+import marlin.reaction.Shape.Prototype.PrototypeList;
 
 public class PaintInk extends Window {
 
   public static Ink.inkList inkList = new Ink.inkList();
+  public static PrototypeList pList = new PrototypeList();
 
   public PaintInk() {
     super("PaintInk", UC.screenWidth, UC.screenHeight);
@@ -25,7 +29,7 @@ public class PaintInk extends Window {
     // 可以把graphic改成graphic2D实现抗锯齿
 //    RenderingHints hints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 //    g2d.addRenderingHints(hint);
-
+    pList.show(g);
     /*
     此处绘制的过去已经画好并保存在intList的图形。
      */
@@ -34,6 +38,19 @@ public class PaintInk extends Window {
     此处绘制的是目前正在画（鼠标释放前）并实时保存在Buffer对象里的图形。
      */
     Ink.BUFFER.show(g);
+    g.drawString("points: " + Ink.BUFFER.n, 600, 30);
+//    G.VS vs = new G.VS(100, 100, 100,100);
+//    G.V.T.set(Ink.BUFFER.bbox, vs);
+//    G.PL pl = new G.PL(25);
+//    Ink.BUFFER.subSample(pl);
+//    pl.transform();
+//    pl.draw(g);
+
+//    if (Ink.BUFFER.n > 0) {
+//      Ink.Norm norm = new Ink.Norm();
+//      norm.drawAt(g, new G.VS(500, 30, 100, 100));
+//      norm.drawAt(g, new G.VS(50, 200, 200, 200));
+//    }
   }
 
   @Override
@@ -53,7 +70,17 @@ public class PaintInk extends Window {
    */
   @Override
   public void mouseReleased(MouseEvent me) {
-    inkList.add(new Ink());
+    Ink ink = new Ink();
+    inkList.add(ink);
+    Shape.Prototype prototype;
+    if (pList.bestDist(ink.norm) < UC.noMatchDist) {
+      PrototypeList.bestMatch.blend(ink.norm);
+      prototype = PrototypeList.bestMatch;
+    } else {
+      prototype = new Shape.Prototype();
+      pList.add(prototype);
+    }
+    ink.norm = prototype;
     repaint();
   }
 }
