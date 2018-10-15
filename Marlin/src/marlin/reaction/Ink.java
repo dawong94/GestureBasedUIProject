@@ -1,5 +1,6 @@
 package marlin.reaction;
 
+import java.io.Serializable;
 import marlin.graphicslib.G;
 import marlin.graphicslib.I;
 import marlin.graphicslib.UC;
@@ -55,7 +56,7 @@ public class Ink implements I.Show {
     @Override //--I.Show interface
     public void show(Graphics g) {
       this.drawN(g, n);
-      bbox.draw(g);
+//      bbox.draw(g);
     }// draw the n points as a line.
 
     @Override //--I.Area interface
@@ -63,22 +64,22 @@ public class Ink implements I.Show {
       return true;
     } // any point COULD go into ink
 
-    public void pressed(int x, int y) {
+    public void dn(int x, int y) {
       clear();
       bbox.set(x, y);
       add(x, y);
     } // add first point
 
-    public void dragged(int x, int y) {
+    public void drag(int x, int y) {
       add(x, y);
     } // add each point as it comes is
 
-    public void released(int x, int y) {
+    public void up(int x, int y) {
     }
   }
 
   // ---- Norm ----
-  public static class Norm extends G.PL {
+  public static class Norm extends G.PL implements Serializable {
 
     public static final int N = UC.normSampleSize, MAX = UC.normCoordMax;
     public static final G.VS CS = new G.VS(0, 0, MAX, MAX); // the coordinate box for Transforms
@@ -237,7 +238,7 @@ public class Ink implements I.Show {
 //    因为下面的show方法调用drawN时传递的正是这个n，如果第二次点鼠标画图形时，如果n不清零，则此前的BUFFER剩余线条会保留。
 //     */
 //    @Override
-//    public void pressed(int x, int y) {
+//    public void dn(int x, int y) {
 //      clear();
 //      add(x, y);
 //      // 每次鼠标点下去时重新设定BBox边界，初始大小为当前点位置
@@ -245,12 +246,12 @@ public class Ink implements I.Show {
 //    }
 //
 //    @Override
-//    public void dragged(int x, int y) {
+//    public void drag(int x, int y) {
 //      add(x, y);
 //    }
 //
 //    @Override
-//    public void released(int x, int y) {
+//    public void up(int x, int y) {
 //
 //    }
 //

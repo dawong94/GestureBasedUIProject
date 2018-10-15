@@ -21,13 +21,13 @@ public class Squares extends Window implements ActionListener {
   public static Square.SquareList theList = new Square.SquareList();
   public static Square backgroundSquare = new Square(0, 0) {
     @Override
-    public void pressed(int x, int y) {
+    public void dn(int x, int y) {
       theList.add(new Square(x, y));
       firstPressed.set(x, y);
     }
 
     @Override
-    public void dragged(int x, int y) {
+    public void drag(int x, int y) {
       Square s = theList.get(theList.size() - 1);
       int w = Math.abs(x - firstPressed.x);
       int h = Math.abs(y - firstPressed.y);
@@ -41,7 +41,7 @@ public class Squares extends Window implements ActionListener {
     }
 
     @Override
-    public void released(int x, int y) {
+    public void up(int x, int y) {
       Square s = theList.get(theList.size() - 1);
       if (s.size.x < defaultSize.x) {
         s.size.x = defaultSize.x;
@@ -90,7 +90,7 @@ public class Squares extends Window implements ActionListener {
     firstPressed.set(x, y);
     theSquare = theList.hit(x, y);
     currentArea = theSquare;
-    currentArea.pressed(x, y);
+    currentArea.dn(x, y);
     repaint();
   }
 
@@ -98,13 +98,13 @@ public class Squares extends Window implements ActionListener {
   public void mouseDragged(MouseEvent me) {
     int x = me.getX();
     int y = me.getY();
-    currentArea.dragged(x, y);
+    currentArea.drag(x, y);
     repaint();
   }
 
   @Override
   public void mouseReleased(MouseEvent me) {
-    currentArea.released(me.getX(), me.getY());
+    currentArea.up(me.getX(), me.getY());
   }
 
   /**
@@ -151,20 +151,20 @@ public class Squares extends Window implements ActionListener {
     }
 
     @Override
-    public void pressed(int x, int y) {
+    public void dn(int x, int y) {
       theSquare.dv.set(0, 0);
       mousePosition.x = x - theSquare.loc.x;
       mousePosition.y = y - theSquare.loc.y;
     }
 
     @Override
-    public void dragged(int x, int y) {
+    public void drag(int x, int y) {
       theSquare.loc.x = x - mousePosition.x;
       theSquare.loc.y = y - mousePosition.y;
     }
 
     @Override
-    public void released(int x, int y) {
+    public void up(int x, int y) {
       theSquare.dv.set((x - firstPressed.x) / 20, (y - firstPressed.y) / 20);
     }
 

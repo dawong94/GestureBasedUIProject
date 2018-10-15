@@ -8,13 +8,12 @@ import marlin.graphicslib.G;
 import marlin.graphicslib.Window;
 import marlin.reaction.Ink;
 import marlin.reaction.Shape;
-import marlin.reaction.Shape.Prototype;
-import marlin.reaction.Shape.Prototype.PrototypeList;
+import marlin.reaction.Shape.Prototype.List;
 
 public class PaintInk extends Window {
 
   public static Ink.inkList inkList = new Ink.inkList();
-  public static PrototypeList pList = new PrototypeList();
+  public static List pList = new List();
 
   public PaintInk() {
     super("PaintInk", UC.screenWidth, UC.screenHeight);
@@ -55,13 +54,13 @@ public class PaintInk extends Window {
 
   @Override
   public void mousePressed(MouseEvent me) {
-    Ink.BUFFER.pressed(me.getX(), me.getY());
+    Ink.BUFFER.dn(me.getX(), me.getY());
     repaint();
   }
 
   @Override
   public void mouseDragged(MouseEvent me) {
-    Ink.BUFFER.dragged(me.getX(), me.getY());
+    Ink.BUFFER.drag(me.getX(), me.getY());
     repaint();
   }
 
@@ -74,8 +73,8 @@ public class PaintInk extends Window {
     inkList.add(ink);
     Shape.Prototype prototype;
     if (pList.bestDist(ink.norm) < UC.noMatchDist) {
-      PrototypeList.bestMatch.blend(ink.norm);
-      prototype = PrototypeList.bestMatch;
+      List.bestMatch.blend(ink.norm);
+      prototype = List.bestMatch;
     } else {
       prototype = new Shape.Prototype();
       pList.add(prototype);

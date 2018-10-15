@@ -8,11 +8,11 @@ public interface I {
 
     boolean hit(int x, int y);
 
-    void pressed(int x, int y);
+    void dn(int x, int y);
 
-    void dragged(int x, int y);
+    void drag(int x, int y);
 
-    void released(int x, int y);
+    void up(int x, int y);
   }
 
   interface Show {
