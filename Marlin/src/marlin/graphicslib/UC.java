@@ -13,4 +13,5 @@ public class UC {
   public static final int noMatchDist = 500000; // Based on normSampleSize of 200 and normCoordMax of 500
   public static final int dotThreshold = 6;
   public static final String shapeDBFileName = "C:/Users/LiC/Documents/java/GestureBasedUIProject/Marlin/ShapeDB.bin";
+  public static int noBid = Integer.MAX_VALUE; // or 10000
 }

@@ -14,6 +14,7 @@ public class PaintInk extends Window {
 
   public static Ink.inkList inkList = new Ink.inkList();
   public static List pList = new List();
+  public static String recognized = "";
 
   public PaintInk() {
     super("PaintInk", UC.screenWidth, UC.screenHeight);
@@ -23,7 +24,7 @@ public class PaintInk extends Window {
   public void paintComponent(Graphics g) {
     G.fillBackground(g, Color.WHITE);
     g.setColor(Color.RED);
-    g.drawString("points: " + Ink.BUFFER.n, 600, 30);
+//    g.drawString("points: " + Ink.BUFFER.n, 600, 30);
 
     // 可以把graphic改成graphic2D实现抗锯齿
 //    RenderingHints hints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -37,7 +38,7 @@ public class PaintInk extends Window {
     此处绘制的是目前正在画（鼠标释放前）并实时保存在Buffer对象里的图形。
      */
     Ink.BUFFER.show(g);
-    g.drawString("points: " + Ink.BUFFER.n, 600, 30);
+    g.drawString(recognized, 700, 400);
 //    G.VS vs = new G.VS(100, 100, 100,100);
 //    G.V.T.set(Ink.BUFFER.bbox, vs);
 //    G.PL pl = new G.PL(25);
@@ -70,16 +71,18 @@ public class PaintInk extends Window {
   @Override
   public void mouseReleased(MouseEvent me) {
     Ink ink = new Ink();
-    inkList.add(ink);
-    Shape.Prototype prototype;
-    if (pList.bestDist(ink.norm) < UC.noMatchDist) {
-      List.bestMatch.blend(ink.norm);
-      prototype = List.bestMatch;
-    } else {
-      prototype = new Shape.Prototype();
-      pList.add(prototype);
-    }
-    ink.norm = prototype;
+    Shape s = Shape.recognize(ink);
+    recognized = "Recognized: " + ((s == null) ? "UNKNOWN" : s.name);
+//    inkList.add(ink);
+//    Shape.Prototype prototype;
+//    if (pList.bestDist(ink.norm) < UC.noMatchDist) {
+//      List.bestMatch.blend(ink.norm);
+//      prototype = List.bestMatch;
+//    } else {
+//      prototype = new Shape.Prototype();
+//      pList.add(prototype);
+//    }
+//    ink.norm = prototype;
     repaint();
   }
 }

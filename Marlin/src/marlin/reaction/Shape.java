@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,32 +14,52 @@ import marlin.graphicslib.G;
 import marlin.graphicslib.I;
 import marlin.graphicslib.UC;
 import marlin.reaction.Ink.Norm;
-import marlin.reaction.Shape.Prototype.List;
 
 public class Shape implements Serializable {
 
   public String name;
-  public List prototypes = new List();
-
+  public Shape.Prototype.List prototypes = new Shape.Prototype.List();
   public Shape(String name) {
     this.name = name;
   }
 
-  public static HashMap<String, Shape> DB = loadDB();
+  public static class Database extends HashMap<String, Shape> {
+
+    private Database() {
+      super();
+      String dot = "DOT";
+      put(dot, new Shape(dot));
+    }
+    private Shape forceShape(String name) {
+      if (!DB.containsKey(name)) {
+        put(name, new Shape(name));
+      }
+      return DB.get(name);
+    }
+    public void train(String name, Ink.Norm norm) {
+      if (isLegal(name)) {
+        forceShape(name).prototypes.train(norm);
+      }
+    }
+    public static boolean isLegal(String name) {
+      return !name.equals("") && !name.equals("DOT");
+    }
+  }
+
+  public static Database DB = loadDB();
   public static Shape DOT = DB.get("DOT");
   public static Collection<Shape> LIST = DB.values();
 
-  public static HashMap<String, Shape> loadDB() {
-    HashMap<String, Shape> res = new HashMap<>();
-    res.put("DOT", new Shape("DOT"));
-//    res.put("1", new Shape("1"));
+  public static Database loadDB() {
+    Database res;
     try {
       ObjectInputStream ois = new ObjectInputStream(new FileInputStream(UC.shapeDBFileName));
-      res = (HashMap<String, Shape>) ois.readObject();
+      res = (Database) ois.readObject();
       System.out.println("Loaded Shape DB.");
     } catch (Exception e) {
-      System.out.println("Failed load Shape DB.");
+      System.out.println("Failed loading Shape DB.");
       System.out.println(e);
+      res = new Database();
     }
     return res;
   }
@@ -49,7 +68,9 @@ public class Shape implements Serializable {
     try {
       ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(UC.shapeDBFileName));
       oos.writeObject(DB);
-    } catch (Exception e) { System.out.println(e); }
+    } catch (Exception e) {
+      System.out.println(e);
+    }
   }
 
   public static Shape recognize(Ink ink) { // can return null
@@ -94,6 +115,14 @@ public class Shape implements Serializable {
           }
         }
         return bestSoFar;
+      }
+
+      public void train(Ink.Norm norm) {
+        if (bestDist(norm) < UC.noMatchDist) {
+          bestMatch.blend(norm);
+        } else {
+          add(new Shape.Prototype());
+        }
       }
 
       private static int m = 10, w = 60;

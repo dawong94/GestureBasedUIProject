@@ -1,6 +1,7 @@
 package marlin.graphicslib;
 
 import java.awt.Graphics;
+import marlin.reaction.Gesture;
 
 public interface I {
 
@@ -20,4 +21,11 @@ public interface I {
     void show(Graphics g);
   }
 
+  interface Act {
+    void act(Gesture gesture);
+  }
+
+  interface React extends Act {
+    int bid(Gesture gesture);
+  }
 }
